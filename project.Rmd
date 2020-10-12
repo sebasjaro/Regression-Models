@@ -1,0 +1,53 @@
+---
+title: "Regression Model Course Project"
+author: "Sebastian Jaroszewicz"
+date: "12/10/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The objective of this study is to ooking at a data set of a collection of cars and to explore the relationship between a set of variables and miles per gallon (MPG) (outcome). In particular it is of interest to answer the following questions:
+
+* “Is an automatic or manual transmission better for MPG”
+* "Quantify the MPG difference between automatic and manual transmissions"
+
+The data set that will be used to carry out the study will be the \textcolor{red}{mtcars}.
+
+## Exploratory Data Analysis
+
+```{r analysis}
+library(ggplot2)
+
+data(mtcars)
+head(mtcars)
+str(mtcars)
+```
+The data set is composed of with 32 observations on 11 (numeric) variables.
+
+1.	mpg	Miles/(US) gallon
+2.	cyl	Number of cylinders
+3.	disp	Displacement (cu.in.)
+4.	hp	Gross horsepower
+5.	drat	Rear axle ratio
+6.	wt	Weight (1000 lbs)
+7.	qsec	1/4 mile time
+8.	vs	Engine (0 = V-shaped, 1 = straight)
+9.	am	Transmission (0 = automatic, 1 = manual)
+10.	gear	Number of forward gears
+11.	carb	Number of carburetors
+
+```{r factors}
+# Transform same varialbes into factor
+mtcars$am <- factor(mtcars$am,labels=c("Automatic","Manual"))
+mtcars$cyl <- as.factor(mtcars$cyl)
+mtcars$vs <- as.factor(mtcars$vs)
+mtcars$gear <- factor(mtcars$gear)
+mtcars$carb <- factor(mtcars$carb)
+```
+
+
