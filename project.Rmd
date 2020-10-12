@@ -49,5 +49,12 @@ mtcars$vs <- as.factor(mtcars$vs)
 mtcars$gear <- factor(mtcars$gear)
 mtcars$carb <- factor(mtcars$carb)
 ```
+In order to better understand the data, we made a box plot graph  mpg by tansmission type.
 
-
+```{r box_plot}
+#boxplot(mpg ~ am, data = mtcars, col = (c("red","blue")), ylab = "Miles Per Gallon", xlab = "Transmission Type")
+g <- ggplot(mtcars, aes(x=am, y=mpg, color = am)) + 
+          geom_boxplot()
+g <- g + geom_jitter(shape=16, position=position_jitter(0.2))
+g
+```
