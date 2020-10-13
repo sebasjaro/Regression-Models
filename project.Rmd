@@ -22,12 +22,11 @@ The data set that will be used to carry out the study will be the \textcolor{red
 
 ```{r analysis}
 library(ggplot2)
-
 data(mtcars)
-head(mtcars)
-str(mtcars)
+head(mtcars,3)
+a <- dim(mtcars)
 ```
-The data set is composed of with 32 observations on 11 (numeric) variables.
+The data set is composed of with `r a[1]` observations on `r a[2]` (numeric) variables.
 
 1.	mpg	Miles/(US) gallon
 2.	cyl	Number of cylinders
@@ -46,10 +45,40 @@ The data set is composed of with 32 observations on 11 (numeric) variables.
 mtcars$am <- factor(mtcars$am,labels=c("Automatic","Manual"))
 mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$vs <- as.factor(mtcars$vs)
-mtcars$gear <- factor(mtcars$gear)
-mtcars$carb <- factor(mtcars$carb)
+mtcars$gear <- as.factor(mtcars$gear)
+mtcars$carb <- as.factor(mtcars$carb)
 ```
-In order to better understand the data, we made a box plot graph  mpg by tansmission type.
+In order to better understand the data, we made a box plot graph  mpg by tansmission type (see appendix).
+
+
+The plot shows a significant difference between manual and automatic transmissions. To quantitatively analyze this difference we are going to perform a t-test
+```{r t_test}
+testResults <- t.test(mtcars$mpg ~ mtcars$am)
+testResults
+```
+The T-Test rejects the null hypothesis that the difference between transmission
+types is 0. The difference estimate between the 2 transmissions is about 7 mpg in favor of the manual.
+
+## Regression Model
+To study the relationship between mpg and the other variables, we performed a regression model for this dataset. We use multiple linear regression and the R step function, which chooses the best model.
+
+```{r regression, eval=FALSE}
+fit <- lm(mpg~.,mtcars) 
+summary(fit)
+fit_Step <- step(fit)
+```
+The model suggest to use the formula **mpg ~ cyl + hp + wt + am**
+```{r call}
+model = lm(mpg~ wt + qsec + am, data=mtcars)
+summary(model)
+```
+In th appendix we plot the residuals of the model.
+
+## Conclusions
+From our study we can determine that there is a difference in mpg in relation to transmission type in favor of manual. But a better explanation adjust with weight and qsec.
+
+## Appendix
+
 
 ```{r box_plot}
 #boxplot(mpg ~ am, data = mtcars, col = (c("red","blue")), ylab = "Miles Per Gallon", xlab = "Transmission Type")
@@ -57,4 +86,10 @@ g <- ggplot(mtcars, aes(x=am, y=mpg, color = am)) +
           geom_boxplot()
 g <- g + geom_jitter(shape=16, position=position_jitter(0.2))
 g
+```
+```{r residuals}
+ggplot(model, aes(.fitted, .resid)) + geom_point() +
+  stat_smooth(method="loess", col="steelblue") + geom_hline(yintercept=0, linetype="dashed") +
+  xlab("Fitted values")+ylab("Residuals") + 
+  ggtitle("Residual vs Fitted Plot") + theme_bw()
 ```
